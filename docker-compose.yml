@@ -1,0 +1,143 @@
+services:
+  # ----------------------------------------------------
+  # HOMARR - DASHBOARD
+  # ----------------------------------------------------
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    hostname: homarr
+    restart: unless-stopped
+    volumes:
+      - ${ROOT_DIR}/config/homarr/configs:/app/data/configs
+      - ${ROOT_DIR}/config/homarr/icons:/app/public/icons
+      - ${ROOT_DIR}/config/homarr/data:/data
+    ports:
+      - 7575:7575
+
+  # ----------------------------------------------------
+  # JELLYFIN MEDIA SERVER
+  # ----------------------------------------------------
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    hostname: jellyfin
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/jellyfin:/config
+      - ${ROOT_DIR}/data/media:/data/media
+    ports:
+      - 8096:8096        # Web UI
+      - 7359:7359/udp    # Auto-discovery for local apps
+      - 1900:1900/udp    # DLNA for older Smart TVs/Consoles
+
+  # ----------------------------------------------------
+  # QBITTORRENT DOWNLOAD CLIENT
+  # ----------------------------------------------------
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    hostname: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - ${ROOT_DIR}/config/qbittorrent:/config
+      - ${ROOT_DIR}/data/torrents:/data/torrents
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+
+  # ----------------------------------------------------
+  # THE ARR MANAGERS
+  # ----------------------------------------------------
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    hostname: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/radarr:/config
+      - ${ROOT_DIR}/data:/data # Atomic Move Magic
+    ports:
+      - 7878:7878
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    hostname: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/sonarr:/config
+      - ${ROOT_DIR}/data:/data # Atomic Move Magic
+    ports:
+      - 8989:8989
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    hostname: prowlarr
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/prowlarr:/config
+    ports:
+      - 9696:9696
+  # ----------------------------------------------------
+  # FLARESOLVERR - CAPTCHA & CLOUDFLARE BYPASS
+  # ----------------------------------------------------
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    hostname: flaresolverr
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - LOG_LEVEL=info
+    ports:
+      - 8191:8191
+  # ----------------------------------------------------
+  # JELLYSEERR - REQUEST & DISCOVERY
+  # ----------------------------------------------------
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    hostname: jellyseerr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/jellyseerr:/app/config
+    ports:
+      - 5055:5055
