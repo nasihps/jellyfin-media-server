@@ -1,4 +1,4 @@
-# Ultimate Media Server
+# Self Host Jellyfin Media Server - ARR Stack
 
 This stack contains a fully automated, hardlink-optimized Docker setup. It features instant file moves (Atomic Moves)
 
