@@ -4,7 +4,7 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
 
 ## 🚀 1. Starting the Server
 
-1. Open a terminal and navigate to the docker compose file directory:
+1. Open a terminal and clone the repo, then go to the directory:
    `cd ~/jellyfin-media-server`
 2. Create the necessary directories for data and configuration:
    ```bash
@@ -13,11 +13,13 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
    mkdir -p ~/jellyfin-media-server/config/{jellyfin,radarr,sonarr,prowlarr,qbittorrent}
    mkdir -p ~/jellyfin-media-server/config/homarr/{configs,icons,data}
    ```
-3. Start the containers in the background:
+3. Make sure docker is installed:
+   `sudo apt update && sudo apt install -y docker.io docker-compose-v2`
+4. Start the containers in the background:
    `docker compose up -d`
-4. Check the logs for qBittorrent's temporary password:
+5. Check the logs for qBittorrent's temporary password:
    `docker logs qbittorrent`
-5. To stop all containers:
+6. To stop all containers:
    `docker compose down`
 
 ---
