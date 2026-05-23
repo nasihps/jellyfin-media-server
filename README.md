@@ -32,14 +32,21 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
 1. **If you prefer Zero Seeding:** Go to Options (Gear Icon) > BitTorrent. Check the box to limit share ratio to `0` and set the action to `Pause`. Check the box to limit seeding time to `0` minutes.
 2. **Paths:** Go to Options > Downloads. Set the Default Save Path to `/data/torrents/`.
 
-### Step B: Radarr (`http://localhost:7878`) & Sonarr (`http://localhost:8989`)
+### Step B: Jellyfin (`http://localhost:8096`)
+1. **Setup:** Complete the initial setup wizard.
+2. Add Library > Movies > Folder: `/data/media/movies`.
+3. Add Library > Shows > Folder: `/data/media/tv`.
+4. **Generate API Key:** Go to Advanced > API Keys. Create a new key for Radarr integration.
+
+### Step C: Radarr (`http://localhost:7878`) & Sonarr (`http://localhost:8989`)
 1. **Enable Hardlinks:** Go to Settings > Media Management. Click "Show Advanced". Check "Rename Movies/Episodes" and check "Use Hardlinks instead of Copy".
 2. **Root Folders:** At the bottom of Media Management, add `/data/media/movies` (Radarr) and `/data/media/tv` (Sonarr).
 3. **Link qBittorrent:** Go to Settings > Download Clients. Add qBittorrent. Use Host: `qbittorrent`, Port: `8080`, and enter your login. Ensure "Remove Completed" is checked. Test and Save.
 4. **Get API Keys:** Go to Settings > General. Copy the API keys to a notepad.
 5. **Enable Metadata:** In Radarr, go to Settings > Metadata > Emby/Kodi. Enable it, then check "Enable Movie Metadata" and "Enable Movie Images".
+6. **Connect to Jellyfin (Radarr):** Go to Settings > Connect. Click +. Select Jellyfin. Configure: Name: `Jellyfin Sync`, Enable toggle, Host: `http://jellyfin:8096`, API Key: (from Jellyfin > Advanced > API Keys), Username: your Jellyfin admin username. Check "On Grab" and "On Download/Upgrade". Test and Save.
 
-### Step C: Prowlarr (`http://localhost:9696`)
+### Step D: Prowlarr (`http://localhost:9696`)
 1. **Add Indexers:** Go to Indexers > Add. Search for and add your preferred public trackers (e.g., 1337x).
    - *Note: Enable magnetic URL in Prowlarr -> Indexer settings -> Enable magnetic URL.*
    - *Note: For trackers like 1337x, EZTV, etc., they require FlareSolverr. Enable it in Prowlarr -> Indexer Proxy settings -> configure FlareSolverr and create a tag. Use the tag in individual indexer settings (1337x, EZTV).*
@@ -47,11 +54,6 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
    - Prowlarr Server: `http://prowlarr:9696`
    - Radarr/Sonarr Server: `http://radarr:7878` or `http://sonarr:8989`
    - Paste the respective API keys. Test and Save.
-
-### Step D: Jellyfin (`http://localhost:8096`)
-1. Complete the initial setup wizard.
-2. Add Library > Movies > Folder: `/data/media/movies`.
-3. Add Library > Shows > Folder: `/data/media/tv`.
 
 ### Step E: Homarr (`http://localhost:7575`)
 1. Enter edit mode (top right). Add App blocks for your services.
