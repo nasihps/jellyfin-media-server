@@ -107,6 +107,24 @@ services:
       - ${ROOT_DIR}/config/prowlarr:/config
     ports:
       - 9696:9696
+
+  # ----------------------------------------------------
+  # BAZARR - SUBTITLE COMPANION
+  # ----------------------------------------------------
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    hostname: bazarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}/config/bazarr:/config
+      - ${ROOT_DIR}/data:/data # Access to media files to save subtitles
+    ports:
+      - 6767:6767
   # ----------------------------------------------------
   # FLARESOLVERR - CAPTCHA & CLOUDFLARE BYPASS
   # ----------------------------------------------------
