@@ -10,7 +10,7 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
    ```bash
    mkdir -p ~/jellyfin-media-server/data/torrents/{movies,tv}
    mkdir -p ~/jellyfin-media-server/data/media/{movies,tv}
-   mkdir -p ~/jellyfin-media-server/config/{jellyfin,radarr,sonarr,prowlarr,qbittorrent}
+   mkdir -p ~/jellyfin-media-server/config/{jellyfin,radarr,sonarr,prowlarr,qbittorrent,bazarr}
    mkdir -p ~/jellyfin-media-server/config/homarr/{configs,icons,data}
    ```
 3. Make sure docker is installed:
@@ -63,3 +63,11 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
 1. **Connect to Jellyfin:** Connect the Jellyfin server with `http://jellyfin:8096`.
 2. **Login:** Login with your Jellyfin username and password.
 3. **Add Arr Apps:** Add Radarr & Sonarr connections using their respective API keys (e.g., `http://radarr:7878` and `http://sonarr:8989`).
+
+### Step G: Bazarr (`http://localhost:6767`)
+1. **Connect Arr Apps:** Go to Settings > Radarr/Sonarr. Enable them, use Address: `radarr` / `sonarr` and Port: `7878` / `8989`. Paste their respective API keys. Test and Save.
+2. **Add Providers:** Go to Settings > Providers. Add custom providers (e.g., YIFY, OpenSubtitles.com, Gestdown). 
+   - *Embedded Subtitles Note:* To extract built-in subtitles into separate `.srt` files, add the "Embedded Subtitles" provider AND go to Settings > Subtitles to **disable** "Treat Embedded Subtitles as Downloaded". To skip extracting and just rely on the video's built-in subtitles, **enable** the setting and do NOT add the provider.
+3. **Set Languages:** Go to Settings > Languages. Add your language to the filter (e.g., `English`). Then, create a Language Profile (e.g., name it `English Only` and select English) and set it as the default for Series and Movies by enabling the default toggle at the Default Language Profiles section.
+4. **Mass Edit Existing:** To apply the language profile to existing media, go to the Movies/Series tab, click "Mass Edit", select all, change the profile, and save.
+5. **Auto-Sync:** (Optional) In Settings > Subtitles, enable "Use Auto-Sync" to automatically fix timing issues using FFsubsync.
