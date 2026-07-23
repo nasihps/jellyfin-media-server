@@ -1,19 +1,32 @@
 services:
+  # ---------------------------------------------------
+  # NGINX
+  # ---------------------------------------------------
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ${ROOT_DIR}/config/nginx/conf.d:/etc/nginx/conf.d
   # ----------------------------------------------------
   # HOMARR - DASHBOARD
   # ----------------------------------------------------
   homarr:
-    image: ghcr.io/ajnart/homarr:latest
+    image: ghcr.io/homarr-labs/homarr:latest
     container_name: homarr
     hostname: homarr
     restart: unless-stopped
-    volumes:
-      - ${ROOT_DIR}/config/homarr/configs:/app/data/configs
-      - ${ROOT_DIR}/config/homarr/icons:/app/public/icons
-      - ${ROOT_DIR}/config/homarr/data:/data
     ports:
-      - 7575:7575
-
+      - "7575:7575"
+    environment:
+      - SECRET_ENCRYPTION_KEY=5e69936bfd17ef20674214e9c3d3fca9bba0415c25e487f7237c37bd0bf979e9
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${ROOT_DIR}/config/homarr/appdata:/appdata
   # ----------------------------------------------------
   # JELLYFIN MEDIA SERVER
   # ----------------------------------------------------
@@ -125,6 +138,29 @@ services:
       - ${ROOT_DIR}/data:/data # Access to media files to save subtitles
     ports:
       - 6767:6767
+
+  # ----------------------------------------------------
+  # REQUEST MANAGEMENT
+  # ----------------------------------------------------
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    hostname: seerr
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    volumes:
+      - ${ROOT_DIR}/config/seerr:/app/config
+    ports:
+      - 5055:5055
+  
   # ----------------------------------------------------
   # FLARESOLVERR - CAPTCHA & CLOUDFLARE BYPASS
   # ----------------------------------------------------
@@ -143,19 +179,5 @@ services:
       - LOG_LEVEL=info
     ports:
       - 8191:8191
-  # ----------------------------------------------------
-  # JELLYSEERR - REQUEST & DISCOVERY
-  # ----------------------------------------------------
-  jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
-    hostname: jellyseerr
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT_DIR}/config/jellyseerr:/app/config
-    ports:
-      - 5055:5055
+
+
