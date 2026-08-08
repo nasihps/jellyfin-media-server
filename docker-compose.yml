@@ -1,15 +1,4 @@
 services:
-  # ---------------------------------------------------
-  # NGINX
-  # ---------------------------------------------------
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ${ROOT_DIR}/config/nginx/conf.d:/etc/nginx/conf.d
   # ----------------------------------------------------
   # HOMARR - DASHBOARD
   # ----------------------------------------------------
@@ -180,4 +169,6 @@ services:
     ports:
       - 8191:8191
 
-
+networks:
+  default:
+    name: jellyfin_server_network

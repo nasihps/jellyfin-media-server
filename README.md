@@ -10,16 +10,23 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
    ```bash
    mkdir -p ~/jellyfin-media-server/data/torrents/{movies,tv}
    mkdir -p ~/jellyfin-media-server/data/media/{movies,tv}
-   mkdir -p ~/jellyfin-media-server/config/{jellyfin,radarr,sonarr,prowlarr,qbittorrent,bazarr}
-   mkdir -p ~/jellyfin-media-server/config/homarr/{configs,icons,data}
+   mkdir -p ~/jellyfin-media-server/config/{jellyfin,radarr,sonarr,prowlarr,qbittorrent,bazarr,seerr}
+   mkdir -p ~/jellyfin-media-server/config/homarr/appdata
    ```
-3. Make sure docker is installed:
+3. Create a `.env` file in the project root directory (you can check your user/group IDs by running `id` in terminal):
+   ```env
+   PUID=1000
+   PGID=1000
+   TZ=Asia/Kolkata
+   ROOT_DIR=.
+   ```
+4. Make sure docker is installed:
    `sudo apt update && sudo apt install -y docker.io docker-compose-v2`
-4. Start the containers in the background:
+5. Start the containers in the background:
    `docker compose up -d`
-5. Check the logs for qBittorrent's temporary password:
+6. Check the logs for qBittorrent's temporary password:
    `docker logs qbittorrent`
-6. To stop all containers:
+7. To stop all containers:
    `docker compose down`
 
 ---
@@ -49,7 +56,7 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
 ### Step D: Prowlarr (`http://localhost:9696`)
 1. **Add Indexers:** Go to Indexers > Add. Search for and add your preferred public trackers (e.g., 1337x).
    - *Note: Enable magnetic URL in Prowlarr -> Indexer settings -> Enable magnetic URL.*
-   - *Note: For trackers like 1337x, EZTV, etc., they require FlareSolverr. Enable it in Prowlarr -> Indexer Proxy settings -> configure FlareSolverr and create a tag. Use the tag in individual indexer settings (1337x, EZTV).*
+   - *Note: For trackers like 1337x, EZTV, etc., they require FlareSolverr. Enable it in Prowlarr -> Indexer Proxy settings -> configure FlareSolverr (Host: `http://flaresolverr:8191`) and create a tag. Use the tag in individual indexer settings (1337x, EZTV).*
 2. **Link to Arr Apps:** Go to Settings > Apps. Add Radarr and Sonarr.
    - Prowlarr Server: `http://prowlarr:9696`
    - Radarr/Sonarr Server: `http://radarr:7878` or `http://sonarr:8989`
@@ -59,7 +66,7 @@ This stack contains a fully automated, hardlink-optimized Docker setup. It featu
 1. Enter edit mode (top right). Add App blocks for your services.
 2. Use internal Docker addresses (e.g., `http://radarr:7878`) for API connections, and `http://localhost:7878` for external button links. Paste your API keys where prompted to enable dashboard widgets.
 
-### Step F: Jellyseerr (`http://localhost:5055`)
+### Step F: Seerr (`http://localhost:5055`)
 1. **Connect to Jellyfin:** Connect the Jellyfin server with `http://jellyfin:8096`.
 2. **Login:** Login with your Jellyfin username and password.
 3. **Add Arr Apps:** Add Radarr & Sonarr connections using their respective API keys (e.g., `http://radarr:7878` and `http://sonarr:8989`).
